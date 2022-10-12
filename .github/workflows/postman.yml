@@ -26,6 +26,7 @@ jobs:
 
       # Run the POSTMAN collection
       - name: Run POSTMAN collection
+        continue-on-error: true
         run: |
           npx newman run petstore.collection.json -r cli,htmlextra --reporter-htmlextra-export testResults/htmlreport.html
 
