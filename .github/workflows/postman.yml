@@ -31,15 +31,17 @@ jobs:
           npx newman run petstore.collection.json -r cli,htmlextra --reporter-htmlextra-export testResults/htmlreport.html
 
       # Upload the contents of Test Results directory to workspace
-      - name: Deploy report page
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact newman report
+        uses: actions/upload-artifact@v1
+        if: always()
         with:
-         github_token: ${{ secrets.NEWMAN_TOKEN }}
-         publish_dir: ./testResults
-         user_name: 'github-actions[bot]'
-         user_email: 'github-actions[bot]@users.noreply.github.com'
-      - name: Output the run Details
-        uses: actions/upload-artifact@v2
+            name: testResults
+            path: ./testResults
+      - name: Deploy report
+        uses: JamesIves/github-pages-deploy-action@3.1.0
+        if: always()
         with:
-          name: TestResults
-          path: testResults
+            ACCESS_TOKEN: ${{'secrets.NEWMAN_TOKEN'}}
+            BRANCH: main # The branch the action should deploy to.
+            FOLDER: testResults # The folder the action should deploy.
+            
