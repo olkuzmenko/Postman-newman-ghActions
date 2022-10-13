@@ -1,0 +1,35 @@
+name: Create newman report
+on:
+  push:
+    branches:
+      - main
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+      - name: Install newman
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+      - name: Run POSTMAN collection
+        continue-on-error: true
+        run: |
+          npx newman run petstore.collection.json -r cli,htmlextra --reporter-htmlextra-export ./testResults/index.html
+      - name: Deploy report page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         publish_dir: ./testResults
+         user_name: 'github-actions[bot]'
+         user_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: Output the run Details
+        uses: actions/upload-artifact@v2
+        with:
+          name: testResults
+          path: ./testResults
