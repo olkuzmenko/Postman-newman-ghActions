@@ -41,5 +41,5 @@ jobs:
       - name: Output the run Details
         uses: actions/upload-artifact@v2
         with:
-          name: TestResults
-          path: testResults
+          name: testResults
+          path: ./testResults
